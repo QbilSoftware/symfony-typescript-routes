@@ -199,7 +199,7 @@ final readonly class GeneratorService
                 'appendQueryParams(',
                 "replaceRouteParams('",
                 $route->getPath(),
-                sprintf("', %s", $this->createRouteParamsMergeExpressionForDefaults($route)),
+                sprintf("', %s", $this->createRouteParamsMergeExpressionForDefaults($route, $variables)),
                 '), queryParams',
                 ')',
             ]);
@@ -222,7 +222,7 @@ final readonly class GeneratorService
                 'appendQueryParams(',
                 "replaceRouteParams('",
                 $absolutePath,
-                sprintf("', %s", $this->createRouteParamsMergeExpressionForDefaults($route)),
+                sprintf("', %s", $this->createRouteParamsMergeExpressionForDefaults($route, $variables)),
                 '), queryParams',
                 ')',
             ]);
@@ -270,13 +270,22 @@ final readonly class GeneratorService
         return str_starts_with($requirement, '\\');
     }
 
-    private function createRouteParamsMergeExpressionForDefaults(Route $route): string
+    /**
+     * Only defaults that fill a placeholder in the path belong in the route params. A route also carries
+     * internal defaults such as `_controller`, or the `route`/`permanent` options of a RedirectController,
+     * and those would break the generated signature.
+     *
+     * @param array<string> $variables
+     */
+    private function createRouteParamsMergeExpressionForDefaults(Route $route, array $variables): string
     {
-        if (!$route->getDefaults()) {
+        $defaults = array_intersect_key($route->getDefaults(), array_flip($variables));
+
+        if (!$defaults) {
             return 'routeParams';
         }
 
-        return sprintf('{...%s, ...routeParams}', json_encode($route->getDefaults(), JSON_THROW_ON_ERROR));
+        return sprintf('{...%s, ...routeParams}', json_encode($defaults, JSON_THROW_ON_ERROR));
     }
 
     private function deriveUnionExpressionForTypescript(string $requirement): string

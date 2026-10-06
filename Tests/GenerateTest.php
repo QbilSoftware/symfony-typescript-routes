@@ -75,6 +75,22 @@ class GenerateTest extends TestCase
             schemes: 'https'
         ));
 
+        $routeCollection->add('redirect_route_with_internal_defaults', new Route(
+            path: '/old/{id}',
+            defaults: [
+                '_controller' => 'Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController',
+                'route' => 'new_route',
+                'permanent' => true,
+                'keepQueryParams' => true,
+                'keepRequestMethod' => false,
+            ],
+            requirements: [
+                'id' => '\d+',
+            ],
+            host: 'app.development.org',
+            schemes: 'https'
+        ));
+
         yield ['output.ts', $routeCollection, GeneratorConfig::generateEverything()];
         yield ['output_relative.ts', $routeCollection, GeneratorConfig::generateOnlyRelativeUrls()];
         yield ['output_absolute.ts', $routeCollection, GeneratorConfig::generateOnlyAbsoluteUrls()];
