@@ -15,12 +15,12 @@
   },
   "require": {
     "php": ">=8.2",
-    "symfony/config": "^v7.0",
-    "symfony/dependency-injection": "^v7.0",
-    "symfony/http-kernel": "^v7.0",
-    "symfony/routing": "^v7.0",
-    "symfony/validator": "^v7.0",
-    "symfony/yaml": "^v7.0"
+    "symfony/config": "^7.0 || ^8.0",
+    "symfony/dependency-injection": "^7.0 || ^8.0",
+    "symfony/http-kernel": "^7.0 || ^8.0",
+    "symfony/routing": "^7.0 || ^8.0",
+    "symfony/validator": "^7.0 || ^8.0",
+    "symfony/yaml": "^7.0 || ^8.0"
   }
   ,
   "require-dev": {
